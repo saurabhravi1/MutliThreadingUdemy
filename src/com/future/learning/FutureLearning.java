@@ -13,37 +13,35 @@ public class FutureLearning {
 
 	public static void main(String[] args) {
 		
-		FutureTask<String> fx = new FutureTask<>(new Task());
-		fx.run();
+		FutureTask<String> fx = new FutureTask<>(new Task(),"");
+		//fx.run();
 		
-		FutureTask<String> futureTask1 = new FutureTask<>(new Task());
-		FutureTask<String> futureTask2 = new FutureTask<>(new Task());
+		FutureTask<String> futureTask1 = new FutureTask<>(new Task(),"futureTask1");
+		FutureTask<String> futureTask2 = new FutureTask<>(new Task(),"futureTask2");
 		ExecutorService ex = Executors.newFixedThreadPool(2);
-		Future<String> future1 = ex.submit(new Task());
-		Future<String> future2 = ex.submit(new Task());
+		Future<?> future1 = ex.submit(futureTask1);
+		Future<?> future2 = ex.submit(futureTask2);
 		
 		while(true) {
 			try {
-				if(future1.isDone() && future2.isDone()){
+				if(futureTask1.isDone() && futureTask2.isDone()){
 					System.out.println("Done");
 					//shut down executor service
 					ex.shutdown();
 					return;
 				}else {
-					System.out.println("waiting");
+					try {
+						System.out.println(Thread.currentThread().getName()+": waiting");
+						TimeUnit.SECONDS.sleep(2);
+					} catch (InterruptedException e) {
+						
+						e.printStackTrace();
+					}
+					
 				}
 				
-				if(!future1.isDone()){
-				//wait indefinitely for future task to complete
-				System.out.println("FutureTask1 output="+futureTask1.get());
-				}
 				
-				System.out.println("Waiting for FutureTask2 to complete");
-				String s = future2.get(200L, TimeUnit.MILLISECONDS);
-				if(s !=null){
-					System.out.println("FutureTask2 output=");
-				}
-			} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			
 			}
@@ -53,7 +51,7 @@ public class FutureLearning {
 
 }
 
-class Task implements Callable<String>{
+class Task implements Runnable{
 	
 	public String call() {
 		try {
@@ -67,4 +65,16 @@ class Task implements Callable<String>{
 		return Thread.currentThread().getName();
 	}
 	
+	
+	public void run() {
+		try {
+			System.out.println(Thread.currentThread().getName()+": start");
+			TimeUnit.SECONDS.sleep(2);
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
+		System.out.println(Thread.currentThread().getName()+": end");
+		
+	}
 }
