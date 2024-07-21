@@ -1,5 +1,28 @@
 package com.threadlocal.threadscope;
+/**
+ * 
+ * @author DevilJin
+ * 
+ * ThreadLocal:
 
+There are 4 types of scopes in java:
+private: data is available upto the present class only.
+<default>: Data is available upto the present package only.
+protected: Data is available upto the present package and child classes of other packages.
+public: Data is available throughout the application.
+
+I want to make available data upto all resources which are accessed by a particular thread, for this we have to define a new scope , that is called as ‘ThreadScope’.
+
+If we want to define a ‘ThreadScope’ for the data, Java has provided a predefined class as ‘java.lang.ThreadLocal’.
+
+Method Provided by ThreadLoca:
+public void set(Object object): To set data to threadscope
+public Object get(): To get Data for threadscope
+public void remove(): To remove data from thread scope
+public void initialValues: It will provide the initial values in threadscope. It will be called automatically when we try to access the data without setting the data.
+
+ *
+ */
 public class ThreadLocalExample {
 
 	public static void main(String[] args) {
